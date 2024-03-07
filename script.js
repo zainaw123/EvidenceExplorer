@@ -100,7 +100,7 @@ const witnesses = [
         renderNarrative(option.followUp || option);
     }
     
-    function renderNarrative(narrative) {
+    function displayNarrative(narrative) {
         clearAndDisplayQuestionArea();
         questionElement.textContent = narrative.prompt;
         answerElement.style.display = 'none';
