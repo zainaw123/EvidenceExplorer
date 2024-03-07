@@ -1,3 +1,4 @@
+
 const witnesses = [
     {
         name: 'Witness 1',
@@ -8,7 +9,7 @@ const witnesses = [
                     {
                         choice: "Living Room",
                         followUp: {
-                            prompt: "You found a clue in the Living Room :D",
+                            prompt: "You found a clue in the Living Room :D Now where would you like to find the second clue",
                             options: [
                                 {
                                     choice: "Kitchen",
@@ -92,23 +93,22 @@ const witnesses = [
     const answerElement = document.getElementById('answer');
     const answerButton = document.getElementById('answerButton');
 
-
     let narrativeStack = []; 
 
     function handleOption(option) {
-        narrativeStack.push(option);
+        narrativeStack.push(option); 
         renderNarrative(option.followUp || option);
     }
     
-    function displayNarrative(narrative) {
+    function renderNarrative(narrative) {
         clearAndDisplayQuestionArea();
         questionElement.textContent = narrative.prompt;
         answerElement.style.display = 'none';
     
-        // clears previous content
+         // clears previous content
         questionArea.innerHTML = '';
         // re-adds the question
-        questionArea.appendChild(questionElement);
+        questionArea.appendChild(questionElement); 
     
         if (narrative.options) {
             narrative.options.forEach(subOption => {
@@ -118,16 +118,43 @@ const witnesses = [
                 questionArea.appendChild(optionButton);
             });
         } else {
+            // when there are no more options
             answerElement.textContent = "End of this path.";
             answerElement.style.display = 'block';
         }
     
+        // decides whether to go back or to main menu
+        if (narrativeStack.length > 1) {
+            const backButton = document.createElement('button');
+            backButton.textContent = "Back";
+            backButton.onclick = goBack;
+            questionArea.appendChild(backButton);
+        } else if (narrativeStack.length === 1) { 
+            const mainMenuButton = document.createElement('button');
+            mainMenuButton.textContent = "Main Menu";
+            mainMenuButton.onclick = showWitnesses; 
+            questionArea.appendChild(mainMenuButton);
+        }
     }
-    //shows the witnesses on the main screen
+    
+
+    function goBack() {
+        // current narrative gets popped to go back
+        narrativeStack.pop(); 
+        if (narrativeStack.length > 0) {
+            const previousOption = narrativeStack[narrativeStack.length - 1];
+            narrativeStack.pop(); 
+            handleOption(previousOption);
+        } else {
+            //returns to the main menu (witness list)
+            showWitnesses(); 
+        }
+    }
+     //shows the witnesses on the main screen
     function showWitnesses() {
         narrativeStack = []; 
         questionArea.style.display = 'none';
-        witnessesContainer.innerHTML = '';
+        witnessesContainer.innerHTML = ''; 
         witnessesContainer.style.display = 'block';
 
         witnesses.forEach(witness => {
@@ -144,6 +171,5 @@ const witnesses = [
         answerElement.style.display = 'none';
         answerButton.style.display = 'none';
     }
-
     // displays the list of witnesses intially 
     showWitnesses(); 
