@@ -92,44 +92,49 @@ const witnesses = [
     const answerElement = document.getElementById('answer');
     const answerButton = document.getElementById('answerButton');
 
-    // hides questions not used
-    questionArea.style.display = 'none';
-    answerButton.style.display = 'none';
+
+    let narrativeStack = []; 
 
     function handleOption(option) {
-        questionElement.textContent = option.followUp.prompt;
-        answerElement.style.display = 'none'; 
-        while (answerButton.nextSibling) {
-            answerButton.parentNode.removeChild(answerButton.nextSibling);
-        }
+        narrativeStack.push(option);
+        renderNarrative(option.followUp || option);
+    }
     
-        if (option.followUp.options) {
-            option.followUp.options.forEach(subOption => {
+    function displayNarrative(narrative) {
+        clearAndDisplayQuestionArea();
+        questionElement.textContent = narrative.prompt;
+        answerElement.style.display = 'none';
+    
+        // clears previous content
+        questionArea.innerHTML = '';
+        // re-adds the question
+        questionArea.appendChild(questionElement);
+    
+        if (narrative.options) {
+            narrative.options.forEach(subOption => {
                 const optionButton = document.createElement('button');
                 optionButton.textContent = subOption.choice;
                 optionButton.onclick = () => handleOption(subOption);
                 questionArea.appendChild(optionButton);
             });
         } else {
-            // when there are no more options
-            answerElement.textContent = "Done";
+            answerElement.textContent = "End of this path.";
             answerElement.style.display = 'block';
         }
+    
     }
-    
-    function getQuestions(narrative) {
-        clearAndDisplayQuestionArea();
-        narrative.forEach((item) => {
-            const narrativePrompt = document.createElement('p');
-            narrativePrompt.textContent = item.prompt;
-            questionArea.appendChild(narrativePrompt);
-    
-            item.options.forEach(option => {
-                const optionButton = document.createElement('button');
-                optionButton.textContent = option.choice;
-                optionButton.onclick = () => handleOption(option);
-                questionArea.appendChild(optionButton);
-            });
+    //shows the witnesses on the main screen
+    function showWitnesses() {
+        narrativeStack = []; 
+        questionArea.style.display = 'none';
+        witnessesContainer.innerHTML = '';
+        witnessesContainer.style.display = 'block';
+
+        witnesses.forEach(witness => {
+            const button = document.createElement('button');
+            button.textContent = witness.name;
+            button.onclick = () => handleOption({ followUp: witness.narrative[0] });
+            witnessesContainer.appendChild(button);
         });
     }
 
@@ -138,20 +143,7 @@ const witnesses = [
         witnessesContainer.style.display = 'none';
         answerElement.style.display = 'none';
         answerButton.style.display = 'none';
-
-
-        while (questionArea.firstChild && questionArea.firstChild !== questionElement) {
-            questionArea.removeChild(questionArea.firstChild);
-        }
     }
-    
 
-    witnesses.forEach((witness) => {
-        const button = document.createElement('button');
-        button.textContent = witness.name;
-        button.addEventListener('click', () => {
-            getQuestions(witness.narrative);
-        });
-        witnessesContainer.appendChild(button);
-    });
-    
+    // displays the list of witnesses intially 
+    showWitnesses(); 

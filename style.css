@@ -1,15 +1,19 @@
 body{
     font-family: 'Courier New', Courier, monospace;
-    background-color:pink;
-    color: #863c9e;
+    background-color:brown;
+    color: #F5F5DC;
+}
+#app {
+    text-align: center; 
+    width: 100%; 
 }
 
 #witnesses button{
     cursor:pointer;
     margin: 5px;
     padding: 10px;
-    background-color: #863c9e;
-    color:white;
+    background-color: #DAA520;
+    color:#F5F5DC;
     border: none;
     border-radius: 5px;
 }
