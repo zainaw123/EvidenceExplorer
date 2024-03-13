@@ -482,8 +482,8 @@ const witnesses = [
         const imageMap = {
             'Kevin': 'kevin.jpg',
             'Peter': 'peter.png',
-            'Pigsley': 'piglsley.png',
-            'Big Bad Wolf': 'wolf.jpg' 
+            'Pigsley': 'piglsey.png',
+            'Big Bad Wolf': 'wolf.png' 
         };
     
         witnesses.forEach(witness => {
